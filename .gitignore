@@ -12,3 +12,21 @@
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+###> node ###
+node_modules/
+npm-debug.log*
+###< node ###
+
+###> ide ###
+.idea/
+.vscode/
+*.swp
+*.swo
+###< ide ###
+
+###> misc ###
+*.db-wal
+*.db-shm
+/var/last_err.json
+###< misc ###

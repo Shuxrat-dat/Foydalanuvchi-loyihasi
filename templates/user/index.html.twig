@@ -1,0 +1,762 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard — Foydalanuvchi loyihasi{% endblock %}
+
+{% block body %}
+<!-- Page Header & Statistics Cards -->
+<div class="mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">User Management</h1>
+            <p class="text-sm text-slate-500 mt-1">Manage system accounts, permissions, and company personnel.</p>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button onclick="resetDemoData()" id="btn-reset-demo" class="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-sm font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 active:scale-95 transition-all shadow-sm">
+                <i class="fa-solid fa-arrows-rotate text-slate-500" id="reset-icon"></i>
+                <span>Reset Demo</span>
+            </button>
+            <button onclick="openAddModal()" class="inline-flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 active:scale-95 transition-all shadow-md shadow-brand-500/20">
+                <i class="fa-solid fa-user-plus text-xs"></i>
+                <span>Add User</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Users</p>
+                <h3 class="text-2xl font-bold text-slate-900 mt-1" id="stat-total">{{ stats.total }}</h3>
+                <span class="text-xs text-emerald-600 font-medium flex items-center mt-1">
+                    <i class="fa-solid fa-chart-simple mr-1"></i> Registered in DB
+                </span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-users"></i>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Accounts</p>
+                <h3 class="text-2xl font-bold text-emerald-600 mt-1" id="stat-active">{{ stats.active }}</h3>
+                <span class="text-xs text-slate-500 font-medium flex items-center mt-1">
+                    <i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> Ready for login
+                </span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Administrators</p>
+                <h3 class="text-2xl font-bold text-purple-600 mt-1" id="stat-admins">{{ stats.admins }}</h3>
+                <span class="text-xs text-slate-500 font-medium flex items-center mt-1">
+                    <i class="fa-solid fa-shield-halved text-purple-500 mr-1"></i> Full privileges
+                </span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pending Activation</p>
+                <h3 class="text-2xl font-bold text-amber-600 mt-1" id="stat-pending">{{ stats.pending }}</h3>
+                <span class="text-xs text-slate-500 font-medium flex items-center mt-1">
+                    <i class="fa-solid fa-clock text-amber-500 mr-1"></i> Awaiting verification
+                </span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-user-clock"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Controls & Table Card -->
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <!-- Filter Toolbar -->
+    <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div class="relative flex-1 max-w-md">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            </span>
+            <input type="text" id="filter-search" oninput="filterTable()" placeholder="Search by name, email, company, position..." class="w-full pl-10 pr-4 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all placeholder:text-slate-400" value="{{ query }}">
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+            <div class="flex items-center space-x-2 text-xs font-medium text-slate-500">
+                <i class="fa-solid fa-filter text-slate-400"></i>
+                <span>Filters:</span>
+            </div>
+            <select id="filter-role" onchange="filterTable()" class="py-2 pl-3 pr-8 text-xs font-medium bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700">
+                <option value="ALL" {% if current_role == 'ALL' %}selected{% endif %}>All Roles</option>
+                <option value="ROLE_ADMIN" {% if current_role == 'ROLE_ADMIN' %}selected{% endif %}>Admins</option>
+                <option value="ROLE_MANAGER" {% if current_role == 'ROLE_MANAGER' %}selected{% endif %}>Managers</option>
+                <option value="ROLE_USER" {% if current_role == 'ROLE_USER' %}selected{% endif %}>Users</option>
+            </select>
+
+            <select id="filter-status" onchange="filterTable()" class="py-2 pl-3 pr-8 text-xs font-medium bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700">
+                <option value="ALL" {% if current_status == 'ALL' %}selected{% endif %}>All Statuses</option>
+                <option value="ACTIVE" {% if current_status == 'ACTIVE' %}selected{% endif %}>Active</option>
+                <option value="PENDING" {% if current_status == 'PENDING' %}selected{% endif %}>Pending</option>
+                <option value="INACTIVE" {% if current_status == 'INACTIVE' %}selected{% endif %}>Inactive</option>
+            </select>
+
+            <a href="/api" target="_blank" class="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-colors border border-indigo-200">
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                <span>Open in Swagger</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse" id="users-table">
+            <thead>
+                <tr class="border-b border-slate-200 bg-slate-50 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                    <th class="py-3.5 px-4 sm:px-6">User</th>
+                    <th class="py-3.5 px-4">Role</th>
+                    <th class="py-3.5 px-4">Status</th>
+                    <th class="py-3.5 px-4 hidden md:table-cell">Company & Position</th>
+                    <th class="py-3.5 px-4 hidden lg:table-cell">Phone</th>
+                    <th class="py-3.5 px-4 hidden xl:table-cell">Created</th>
+                    <th class="py-3.5 px-4 sm:px-6 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-sm" id="users-tbody">
+                {% for user in users %}
+                    <tr class="hover:bg-slate-50/70 transition-colors user-row" 
+                        id="user-row-{{ user.id }}"
+                        data-id="{{ user.id }}"
+                        data-name="{{ user.fullName }}"
+                        data-email="{{ user.email }}"
+                        data-company="{{ user.company }}"
+                        data-position="{{ user.position }}"
+                        data-role="{{ user.primaryRole }}"
+                        data-status="{{ user.status }}"
+                        data-phone="{{ user.phone }}"
+                        data-bio="{{ user.bio }}">
+                        <td class="py-4 px-4 sm:px-6">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 shadow-sm
+                                    {% if user.primaryRole == 'ROLE_ADMIN' %}
+                                        bg-purple-100 text-purple-700 border border-purple-200
+                                    {% elseif user.primaryRole == 'ROLE_MANAGER' %}
+                                        bg-blue-100 text-blue-700 border border-blue-200
+                                    {% else %}
+                                        bg-slate-100 text-slate-700 border border-slate-200
+                                    {% endif %}">
+                                    {{ user.initials }}
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="font-semibold text-slate-900 truncate user-full-name">{{ user.fullName }}</div>
+                                    <div class="text-xs text-slate-500 truncate user-email">{{ user.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-4">
+                            {% if user.primaryRole == 'ROLE_ADMIN' %}
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+                                    <i class="fa-solid fa-shield-halved mr-1 text-[10px]"></i> Admin
+                                </span>
+                            {% elseif user.primaryRole == 'ROLE_MANAGER' %}
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                                    <i class="fa-solid fa-briefcase mr-1 text-[10px]"></i> Manager
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                                    <i class="fa-solid fa-user mr-1 text-[10px]"></i> User
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="py-4 px-4">
+                            {% if user.status == 'ACTIVE' %}
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Active
+                                </span>
+                            {% elseif user.status == 'PENDING' %}
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span> Pending
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5"></span> Inactive
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="py-4 px-4 hidden md:table-cell">
+                            <div class="text-sm font-medium text-slate-800 truncate user-company">{{ user.company|default('—') }}</div>
+                            <div class="text-xs text-slate-500 truncate user-position">{{ user.position|default('—') }}</div>
+                        </td>
+                        <td class="py-4 px-4 hidden lg:table-cell text-sm text-slate-600 user-phone">
+                            {{ user.phone|default('—') }}
+                        </td>
+                        <td class="py-4 px-4 hidden xl:table-cell text-xs text-slate-400">
+                            {{ user.createdAt ? user.createdAt|date('M d, Y') : '—' }}
+                        </td>
+                        <td class="py-4 px-4 sm:px-6 text-right">
+                            <div class="flex items-center justify-end space-x-1">
+                                <button onclick="viewUser({{ user.id }})" title="View Details" class="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors">
+                                    <i class="fa-solid fa-eye text-sm"></i>
+                                </button>
+                                <button onclick="openEditModal({{ user.id }})" title="Edit User" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                    <i class="fa-solid fa-pen-to-square text-sm"></i>
+                                </button>
+                                <button onclick="confirmDelete({{ user.id }}, '{{ user.fullName|e('js') }}')" title="Delete User" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
+                                    <i class="fa-solid fa-trash text-sm"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr id="empty-state-row">
+                        <td colspan="7" class="py-12 text-center text-slate-400">
+                            <i class="fa-solid fa-user-slash text-4xl mb-3 text-slate-300"></i>
+                            <p class="text-base font-medium text-slate-600">No users found</p>
+                            <p class="text-xs text-slate-400 mt-1">Try resetting demo data or creating a new user.</p>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Table Footer / Count -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50/50 flex items-center justify-between text-xs text-slate-500">
+        <div>
+            Showing <span id="visible-count" class="font-semibold text-slate-700">{{ users|length }}</span> of <span id="total-count" class="font-semibold text-slate-700">{{ users|length }}</span> users
+        </div>
+        <div class="text-right">
+            <span>Synchronized with SQLite</span>
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODALS ================= -->
+
+<!-- 1. View User Details Modal -->
+<div id="modal-view" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 transform transition-all">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+            <h3 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+                <i class="fa-solid fa-address-card text-brand-600"></i>
+                <span>User Profile</span>
+            </h3>
+            <button onclick="closeModal('modal-view')" class="text-slate-400 hover:text-slate-600 p-1">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+        <div class="py-5 space-y-4">
+            <div class="flex items-center space-x-4">
+                <div id="view-avatar" class="w-16 h-16 rounded-2xl bg-brand-100 text-brand-700 font-bold text-xl flex items-center justify-center border border-brand-200 shadow-sm">
+                    SM
+                </div>
+                <div>
+                    <h4 id="view-name" class="text-xl font-bold text-slate-900">User Name</h4>
+                    <p id="view-email" class="text-sm text-slate-500">user@example.com</p>
+                    <div class="flex items-center space-x-2 mt-1.5" id="view-badges"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-2 text-sm">
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span class="text-xs text-slate-400 font-medium block">Company</span>
+                    <span id="view-company" class="font-semibold text-slate-800 mt-0.5 block">—</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span class="text-xs text-slate-400 font-medium block">Position</span>
+                    <span id="view-position" class="font-semibold text-slate-800 mt-0.5 block">—</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span class="text-xs text-slate-400 font-medium block">Phone</span>
+                    <span id="view-phone" class="font-semibold text-slate-800 mt-0.5 block">—</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span class="text-xs text-slate-400 font-medium block">User ID</span>
+                    <span id="view-id" class="font-semibold text-slate-800 mt-0.5 block">#1</span>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 text-sm">
+                <span class="text-xs text-slate-400 font-medium block mb-1">Biography / Notes</span>
+                <p id="view-bio" class="text-slate-600 italic text-xs leading-relaxed">No biography provided.</p>
+            </div>
+        </div>
+        <div class="pt-3 border-t border-slate-100 flex justify-end">
+            <button onclick="closeModal('modal-view')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 2. Add User Modal -->
+<div id="modal-add" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm hidden">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 transform transition-all">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+            <h3 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+                <i class="fa-solid fa-user-plus text-brand-600"></i>
+                <span>Add New User</span>
+            </h3>
+            <button onclick="closeModal('modal-add')" class="text-slate-400 hover:text-slate-600 p-1">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+        <form id="form-add-user" onsubmit="submitAddUser(event)" class="py-4 space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">First Name *</label>
+                    <input type="text" name="firstName" required placeholder="e.g. Jasur" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Last Name *</label>
+                    <input type="text" name="lastName" required placeholder="e.g. Usmonov" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Email *</label>
+                    <input type="email" name="email" required placeholder="jasur.usmonov@example.com" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Phone</label>
+                    <input type="text" name="phone" placeholder="+998 90 123 45 67" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Company</label>
+                    <input type="text" name="company" placeholder="Astracode Tech" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Position</label>
+                    <input type="text" name="position" placeholder="Software Engineer" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Role</label>
+                    <select name="role" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500">
+                        <option value="ROLE_USER">User</option>
+                        <option value="ROLE_MANAGER">Manager</option>
+                        <option value="ROLE_ADMIN">Admin</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Status</label>
+                    <select name="status" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500">
+                        <option value="ACTIVE">Active</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="INACTIVE">Inactive</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Password</label>
+                    <input type="password" name="password" value="user123" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Bio / Notes</label>
+                <textarea name="bio" rows="2" placeholder="Brief notes about the employee or account..." class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500"></textarea>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex justify-end space-x-3">
+                <button type="button" onclick="closeModal('modal-add')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" id="btn-submit-add" class="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-md shadow-brand-500/20">
+                    Create User
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 3. Edit User Modal -->
+<div id="modal-edit" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm hidden">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 transform transition-all">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+            <h3 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+                <i class="fa-solid fa-user-pen text-blue-600"></i>
+                <span>Edit User</span>
+            </h3>
+            <button onclick="closeModal('modal-edit')" class="text-slate-400 hover:text-slate-600 p-1">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+        <form id="form-edit-user" onsubmit="submitEditUser(event)" class="py-4 space-y-4">
+            <input type="hidden" id="edit-user-id" name="id">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">First Name *</label>
+                    <input type="text" id="edit-firstName" name="firstName" required class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Last Name *</label>
+                    <input type="text" id="edit-lastName" name="lastName" required class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Email *</label>
+                    <input type="email" id="edit-email" name="email" required class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Phone</label>
+                    <input type="text" id="edit-phone" name="phone" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Company</label>
+                    <input type="text" id="edit-company" name="company" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Position</label>
+                    <input type="text" id="edit-position" name="position" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Role</label>
+                    <select id="edit-role" name="role" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500">
+                        <option value="ROLE_USER">User</option>
+                        <option value="ROLE_MANAGER">Manager</option>
+                        <option value="ROLE_ADMIN">Admin</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Status</label>
+                    <select id="edit-status" name="status" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500">
+                        <option value="ACTIVE">Active</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="INACTIVE">Inactive</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">New Password</label>
+                    <input type="password" id="edit-password" name="password" placeholder="Leave blank to keep" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Bio / Notes</label>
+                <textarea id="edit-bio" name="bio" rows="2" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500"></textarea>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex justify-end space-x-3">
+                <button type="button" onclick="closeModal('modal-edit')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" id="btn-submit-edit" class="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-md shadow-blue-500/20">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 4. Delete Confirmation Modal -->
+<div id="modal-delete" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm hidden">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 transform transition-all text-center">
+        <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-xl mb-4">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900">Delete User</h3>
+        <p class="text-sm text-slate-500 mt-2">
+            Are you sure you want to delete <span id="delete-user-name" class="font-semibold text-slate-800">this user</span>? This action cannot be undone.
+        </p>
+        <input type="hidden" id="delete-user-id">
+
+        <div class="mt-6 flex items-center justify-center space-x-3">
+            <button onclick="closeModal('modal-delete')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
+                Cancel
+            </button>
+            <button onclick="executeDelete()" id="btn-confirm-delete" class="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 transition-colors shadow-md shadow-rose-500/20">
+                Yes, Delete
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // Modal Helpers
+    function openModal(id) {
+        document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.add('hidden');
+    }
+
+    // Close on backdrop click or Escape
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            ['modal-view', 'modal-add', 'modal-edit', 'modal-delete'].forEach(closeModal);
+        }
+    });
+
+    // View User
+    function viewUser(id) {
+        const row = document.getElementById(`user-row-${id}`);
+        if (!row) return;
+
+        const name = row.dataset.name;
+        const email = row.dataset.email;
+        const company = row.dataset.company || '—';
+        const position = row.dataset.position || '—';
+        const role = row.dataset.role;
+        const status = row.dataset.status;
+        const phone = row.dataset.phone || '—';
+        const bio = row.dataset.bio || 'No biography provided.';
+
+        document.getElementById('view-id').innerText = '#' + id;
+        document.getElementById('view-name').innerText = name;
+        document.getElementById('view-email').innerText = email;
+        document.getElementById('view-company').innerText = company;
+        document.getElementById('view-position').innerText = position;
+        document.getElementById('view-phone').innerText = phone;
+        document.getElementById('view-bio').innerText = bio;
+
+        const initials = name.split(' ').map(p => p[0]).join('').substring(0, 2).toUpperCase();
+        document.getElementById('view-avatar').innerText = initials || 'U';
+
+        let roleBadge = '';
+        if (role === 'ROLE_ADMIN') roleBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">Admin</span>';
+        else if (role === 'ROLE_MANAGER') roleBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">Manager</span>';
+        else roleBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">User</span>';
+
+        let statusBadge = '';
+        if (status === 'ACTIVE') statusBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>';
+        else if (status === 'PENDING') statusBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">Pending</span>';
+        else statusBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">Inactive</span>';
+
+        document.getElementById('view-badges').innerHTML = roleBadge + statusBadge;
+
+        openModal('modal-view');
+    }
+
+    // Open Add Modal
+    function openAddModal() {
+        document.getElementById('form-add-user').reset();
+        openModal('modal-add');
+    }
+
+    // Submit Add User
+    async function submitAddUser(e) {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        const btn = document.getElementById('btn-submit-add');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
+
+        try {
+            const res = await fetch('/users/new', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+            if (!res.ok || !result.success) {
+                throw new Error(result.message || 'Failed to create user');
+            }
+
+            showToast(result.message || 'User successfully created!');
+            closeModal('modal-add');
+            setTimeout(() => window.location.reload(), 500);
+        } catch (err) {
+            showToast(err.message, 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Create User';
+        }
+    }
+
+    // Open Edit Modal
+    function openEditModal(id) {
+        const row = document.getElementById(`user-row-${id}`);
+        if (!row) return;
+
+        const fullName = row.dataset.name.split(' ');
+        const firstName = fullName[0] || '';
+        const lastName = fullName.slice(1).join(' ') || '';
+
+        document.getElementById('edit-user-id').value = id;
+        document.getElementById('edit-firstName').value = firstName;
+        document.getElementById('edit-lastName').value = lastName;
+        document.getElementById('edit-email').value = row.dataset.email;
+        document.getElementById('edit-phone').value = row.dataset.phone;
+        document.getElementById('edit-company').value = row.dataset.company;
+        document.getElementById('edit-position').value = row.dataset.position;
+        document.getElementById('edit-role').value = row.dataset.role;
+        document.getElementById('edit-status').value = row.dataset.status;
+        document.getElementById('edit-bio').value = row.dataset.bio;
+        document.getElementById('edit-password').value = '';
+
+        openModal('modal-edit');
+    }
+
+    // Submit Edit User
+    async function submitEditUser(e) {
+        e.preventDefault();
+        const form = e.target;
+        const id = document.getElementById('edit-user-id').value;
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        const btn = document.getElementById('btn-submit-edit');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
+
+        try {
+            const res = await fetch(`/users/${id}/edit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+            if (!res.ok || !result.success) {
+                throw new Error(result.message || 'Failed to update user');
+            }
+
+            showToast(result.message || 'User updated successfully!');
+            closeModal('modal-edit');
+            setTimeout(() => window.location.reload(), 500);
+        } catch (err) {
+            showToast(err.message, 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Save Changes';
+        }
+    }
+
+    // Confirm Delete
+    function confirmDelete(id, name) {
+        document.getElementById('delete-user-id').value = id;
+        document.getElementById('delete-user-name').innerText = `"${name}"`;
+        openModal('modal-delete');
+    }
+
+    // Execute Delete
+    async function executeDelete() {
+        const id = document.getElementById('delete-user-id').value;
+        const btn = document.getElementById('btn-confirm-delete');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Deleting...';
+
+        try {
+            const res = await fetch(`/users/${id}/delete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+
+            const result = await res.json();
+            if (!res.ok || !result.success) {
+                throw new Error(result.message || 'Failed to delete user');
+            }
+
+            showToast(result.message || 'User deleted successfully!');
+            closeModal('modal-delete');
+
+            const row = document.getElementById(`user-row-${id}`);
+            if (row) {
+                row.remove();
+                filterTable();
+            }
+        } catch (err) {
+            showToast(err.message, 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Yes, Delete';
+        }
+    }
+
+    // Reset Demo Data
+    async function resetDemoData() {
+        const btn = document.getElementById('btn-reset-demo');
+        const icon = document.getElementById('reset-icon');
+        btn.disabled = true;
+        icon.classList.add('fa-spin');
+
+        try {
+            const res = await fetch('/users/reset-demo', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            const result = await res.json();
+            showToast(result.message || 'Demo data restored!');
+            setTimeout(() => window.location.reload(), 600);
+        } catch (err) {
+            showToast('Failed to reset demo data: ' + err.message, 'error');
+            btn.disabled = false;
+            icon.classList.remove('fa-spin');
+        }
+    }
+
+    // Client-side Instant Filter & Search
+    function filterTable() {
+        const q = (document.getElementById('filter-search').value || '').toLowerCase().trim();
+        const role = document.getElementById('filter-role').value;
+        const status = document.getElementById('filter-status').value;
+
+        const rows = document.querySelectorAll('.user-row');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const name = (row.dataset.name || '').toLowerCase();
+            const email = (row.dataset.email || '').toLowerCase();
+            const company = (row.dataset.company || '').toLowerCase();
+            const position = (row.dataset.position || '').toLowerCase();
+            const userRole = row.dataset.role;
+            const userStatus = row.dataset.status;
+
+            const matchesQuery = !q || name.includes(q) || email.includes(q) || company.includes(q) || position.includes(q);
+            const matchesRole = (role === 'ALL') || (userRole === role);
+            const matchesStatus = (status === 'ALL') || (userStatus === status);
+
+            if (matchesQuery && matchesRole && matchesStatus) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        const visibleCountEl = document.getElementById('visible-count');
+        if (visibleCountEl) visibleCountEl.innerText = visibleCount;
+    }
+</script>
+{% endblock %}

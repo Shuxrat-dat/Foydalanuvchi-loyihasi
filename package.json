@@ -1,0 +1,13 @@
+{
+  "name": "foydalanuvchi-loyihasi",
+  "version": "1.0.0",
+  "description": "Foydalanuvchi loyihasi - User Management System & REST API (Symfony + API Platform)",
+  "author": "Shuxrat Maxmadaliev",
+  "license": "MIT",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "dev": "node scripts/start.js",
+    "start": "node scripts/start.js",
+    "build": "php bin/console cache:warmup --no-interaction"
+  }
+}

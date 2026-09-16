@@ -70,7 +70,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "setup": "node scripts/setup.js",
+        "dev": "node scripts/start.js"
     },
     "conflict": {
         "symfony/symfony": "*"
