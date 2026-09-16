@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Foydalanuvchi loyihasi
 
 User Management System — built with **Symfony 7.4**, **API Platform 4**, and **SQLite** (zero-config database).
