@@ -14,7 +14,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsCommand(
     name: 'app:seed-demo',
-    description: 'Seeds realistic demo users for the Foydalanuvchi loyihasi application',
+    description: 'Foydalanuvchi loyihasi ilovasi uchun demo foydalanuvchilarni yuklash',
 )]
 class SeedDemoDataCommand extends Command
 {
@@ -27,7 +27,7 @@ class SeedDemoDataCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('reset', null, InputOption::VALUE_NONE, 'Clear existing users before seeding');
+        $this->addOption('reset', null, InputOption::VALUE_NONE, 'Yuklashdan oldin mavjud foydalanuvchilarni oʻchirish');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -43,7 +43,7 @@ class SeedDemoDataCommand extends Command
                 $this->entityManager->remove($u);
             }
             $this->entityManager->flush();
-            $io->note('Cleared all existing users.');
+            $io->note('Barcha mavjud foydalanuvchilar oʻchirildi.');
         }
 
         $demoUsers = [
@@ -54,10 +54,10 @@ class SeedDemoDataCommand extends Command
                 'password' => 'admin123',
                 'roles' => ['ROLE_ADMIN'],
                 'company' => 'Astracode Tech',
-                'position' => 'Lead Software Architect',
+                'position' => 'Bosh dasturiy taʼminot arxitektori',
                 'phone' => '+998 90 123 45 67',
                 'status' => 'ACTIVE',
-                'bio' => 'System architect and lead engineer at Astracode Tech with 10+ years of backend development experience.',
+                'bio' => 'Astracode Tech da tizim arxitektori va bosh muhandis, 10+ yillik backend ishlab chiqish tajribasiga ega.',
             ],
             [
                 'firstName' => 'Dilnoza',
@@ -66,10 +66,10 @@ class SeedDemoDataCommand extends Command
                 'password' => 'manager123',
                 'roles' => ['ROLE_MANAGER'],
                 'company' => 'Astracode Tech',
-                'position' => 'Product Director',
+                'position' => 'Mahsulot direktori',
                 'phone' => '+998 93 456 78 90',
                 'status' => 'ACTIVE',
-                'bio' => 'Oversees product strategy, user experience roadmaps, and cross-functional agile teams.',
+                'bio' => 'Mahsulot strategiyasi, foydalanuvchi tajribasi yoʻl xaritalari va turkich funktsiyali jamoalarni boshqaradi.',
             ],
             [
                 'firstName' => 'Jamshid',
@@ -78,10 +78,10 @@ class SeedDemoDataCommand extends Command
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'FinSoft Innovations',
-                'position' => 'Senior Full-Stack Engineer',
+                'position' => 'Katta Full-Stack muhandisi',
                 'phone' => '+998 94 321 65 43',
                 'status' => 'ACTIVE',
-                'bio' => 'Specializes in reactive web frontends and high-load microservice APIs.',
+                'bio' => 'Reaktiv veb interfeyslar va yuqori yukli mikroservis APIlar boʻyicha ixtisoslashgan.',
             ],
             [
                 'firstName' => 'Elena',
@@ -90,10 +90,10 @@ class SeedDemoDataCommand extends Command
                 'password' => 'user123',
                 'roles' => ['ROLE_MANAGER'],
                 'company' => 'Global Logistics Ltd',
-                'position' => 'Operations Manager',
+                'position' => 'Operatsiyalar menejeri',
                 'phone' => '+998 91 789 01 23',
                 'status' => 'ACTIVE',
-                'bio' => 'Coordinates regional supply chain workflows and digital transformation initiatives.',
+                'bio' => 'Mintaqaviy taʼminot zanjiri jarayonlari va raqamli transformatsiya loyihalarini muvofiqlashtiradi.',
             ],
             [
                 'firstName' => 'Sardor',
@@ -102,10 +102,10 @@ class SeedDemoDataCommand extends Command
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'Astracode Tech',
-                'position' => 'Backend Developer',
+                'position' => 'Backend dasturchi',
                 'phone' => '+998 97 111 22 33',
                 'status' => 'ACTIVE',
-                'bio' => 'Passionate about Symfony, API Platform, and event-driven architectures.',
+                'bio' => 'Symfony, API Platform va hodisaga asoslangan arxitekturalar qiziqadi.',
             ],
             [
                 'firstName' => 'Malika',
@@ -114,10 +114,10 @@ class SeedDemoDataCommand extends Command
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'FinSoft Innovations',
-                'position' => 'Frontend Developer',
+                'position' => 'Frontend dasturchi',
                 'phone' => '+998 90 999 88 77',
                 'status' => 'ACTIVE',
-                'bio' => 'Creates accessible, responsive web interfaces with modern CSS and JavaScript.',
+                'bio' => 'Zamonaviy CSS va JavaScript yordamida qulay, moslashuvchan veb interfeyslar yaratadi.',
             ],
             [
                 'firstName' => 'Bobur',
@@ -126,10 +126,10 @@ class SeedDemoDataCommand extends Command
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'TechUz Innovations',
-                'position' => 'DevOps & Cloud Engineer',
+                'position' => 'DevOps va Cloud muhandisi',
                 'phone' => '+998 99 555 44 33',
                 'status' => 'ACTIVE',
-                'bio' => 'Automates CI/CD pipelines, Kubernetes clusters, and cloud observability.',
+                'bio' => 'CI/CD konveyerlarini, Kubernetes klasterlarini va bulut kuzatuvini avtomatlashtiradi.',
             ],
             [
                 'firstName' => 'Zarina',
@@ -138,10 +138,10 @@ class SeedDemoDataCommand extends Command
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'Astracode Tech',
-                'position' => 'UI/UX Designer',
+                'position' => 'UI/UX dizayner',
                 'phone' => '+998 93 777 66 55',
                 'status' => 'PENDING',
-                'bio' => 'Crafts user journey maps, design systems, and modern SaaS product interfaces.',
+                'bio' => 'Foydalanuvchi sayohat xaritalari, dizayn tizimlari va zamonaviy SaaS mahsulot interfeyslarini ishlab chiqadi.',
             ],
             [
                 'firstName' => 'Otabek',
@@ -150,10 +150,10 @@ class SeedDemoDataCommand extends Command
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'TechUz Innovations',
-                'position' => 'QA Automation Lead',
+                'position' => 'QA Avtomatlashtirish boshligʻi',
                 'phone' => '+998 94 222 33 44',
                 'status' => 'INACTIVE',
-                'bio' => 'Builds end-to-end automated testing frameworks and ensures software quality standards.',
+                'bio' => 'Toʻliq avtomatlashtirilgan testlash tizimlarini quradi va dasturiy taʼminot sifatini taʼminlaydi.',
             ],
             [
                 'firstName' => 'Nilufar',
@@ -162,10 +162,10 @@ class SeedDemoDataCommand extends Command
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'FinSoft Innovations',
-                'position' => 'Data Analyst',
+                'position' => 'Maʼlumotlar tahlilchisi',
                 'phone' => '+998 98 444 55 66',
                 'status' => 'ACTIVE',
-                'bio' => 'Turns business data into actionable dashboards and predictive statistical models.',
+                'bio' => 'Biznes maʼlumotlarini amaliy dashboardlarga va bashorat qiluvchi statistik modellarga aylantiradi.',
             ],
             [
                 'firstName' => 'Azizbek',
@@ -174,10 +174,10 @@ class SeedDemoDataCommand extends Command
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'Digital Systems',
-                'position' => 'System Administrator',
+                'position' => 'Tizim administratori',
                 'phone' => '+998 90 333 22 11',
                 'status' => 'PENDING',
-                'bio' => 'Manages high-availability server infrastructure, security audits, and backups.',
+                'bio' => 'Yuqori mavjud server infratuzilmasini, xavfsizlik auditlarini va zaxira nusxalarini boshqaradi.',
             ],
             [
                 'firstName' => 'Shahzod',
@@ -186,10 +186,10 @@ class SeedDemoDataCommand extends Command
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'Astracode Tech',
-                'position' => 'Cybersecurity Analyst',
+                'position' => 'Kiberxavfsizlik tahlilchisi',
                 'phone' => '+998 91 666 77 88',
                 'status' => 'ACTIVE',
-                'bio' => 'Focuses on penetration testing, identity management, and API access security.',
+                'bio' => 'Penetratsiyani sinovdan oʻtkazish, identifikatorlarni boshqarish va API kirish xavfsizligiga eʼtibor qaratadi.',
             ],
         ];
 
@@ -230,14 +230,14 @@ class SeedDemoDataCommand extends Command
         $this->entityManager->flush();
 
         $io->success(sprintf(
-            'Demo data successfully seeded! Created: %d, Updated: %d. Total users in database: %d',
+            'Demo maʼlumotlar muvaffaqiyatli yuklandi! Yaratilgan: %d, Yangilangan: %d. Baza jami foydalanuvchilar: %d',
             $created,
             $updated,
             count($userRepository->findAll())
         ));
 
         $io->table(
-            ['Role', 'Email', 'Password', 'Full Name', 'Company', 'Status'],
+            ['Rol', 'Email', 'Parol', 'Toʻliq ism', 'Korxona', 'Holat'],
             [
                 ['ROLE_ADMIN', 'admin@example.com', 'admin123', 'Shuxrat Maxmadaliev', 'Astracode Tech', 'ACTIVE'],
                 ['ROLE_MANAGER', 'manager@example.com', 'manager123', 'Dilnoza Karimova', 'Astracode Tech', 'ACTIVE'],

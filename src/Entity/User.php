@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'This email is already registered.')]
+#[UniqueEntity(fields: ['email'], message: 'Bu email oldin roʻyxatdan oʻtgan.')]
 #[ApiResource(
     operations: [
         new GetCollection(),
@@ -45,8 +45,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\NotBlank(message: 'Email cannot be blank.')]
-    #[Assert\Email(message: 'Please enter a valid email address.')]
+    #[Assert\NotBlank(message: 'Email maydoni boʻsh boʻlishi mumkin emas.')]
+    #[Assert\Email(message: 'Iltimos, toʻgʻri email manzilini kiriting.')]
     #[Groups(['user:read', 'user:write'])]
     private ?string $email = null;
 
@@ -63,17 +63,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[Assert\Length(min: 6, minMessage: 'Password must be at least 6 characters long.')]
+    #[Assert\Length(min: 6, minMessage: 'Parol kamida 6 ta belgidan iborat boʻlishi kerak.')]
     #[Groups(['user:write'])]
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 100)]
-    #[Assert\NotBlank(message: 'First name cannot be blank.')]
+    #[Assert\NotBlank(message: 'Ism maydoni boʻsh boʻlishi mumkin emas.')]
     #[Groups(['user:read', 'user:write'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 100)]
-    #[Assert\NotBlank(message: 'Last name cannot be blank.')]
+    #[Assert\NotBlank(message: 'Familiya maydoni boʻsh boʻlishi mumkin emas.')]
     #[Groups(['user:read', 'user:write'])]
     private ?string $lastName = null;
 
@@ -170,8 +170,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return match ($this->getPrimaryRole()) {
             'ROLE_ADMIN' => 'Admin',
-            'ROLE_MANAGER' => 'Manager',
-            default => 'User',
+            'ROLE_MANAGER' => 'Menejjer',
+            default => 'Foydalanuvchi',
         };
     }
 

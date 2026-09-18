@@ -1,13 +1,16 @@
 {
   "name": "foydalanuvchi-loyihasi",
   "version": "1.0.0",
-  "description": "Foydalanuvchi loyihasi - User Management System & REST API (Symfony + API Platform)",
+  "description": "Foydalanuvchi loyihasi - Foydalanuvchilarni boshqarish tizimi va REST API (Symfony + API Platform)",
   "author": "Shuxrat Maxmadaliev",
   "license": "MIT",
   "scripts": {
+    "install:all": "composer install --no-interaction && npm install --no-audit --no-fund",
     "setup": "node scripts/setup.js",
     "dev": "node scripts/start.js",
     "start": "node scripts/start.js",
-    "build": "php bin/console cache:warmup --no-interaction"
+    "build": "php bin/console cache:warmup --no-interaction",
+    "db:migrate": "php bin/console doctrine:schema:update --force --no-interaction",
+    "db:seed": "php bin/console app:seed-demo-data --no-interaction"
   }
 }

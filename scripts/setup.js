@@ -12,9 +12,8 @@ const privateKeyFile = path.join(jwtDir, 'private.pem');
 const publicKeyFile = path.join(jwtDir, 'public.pem');
 const dbFile = path.join(varDir, 'data.db');
 
-console.log('\x1b[36m%s\x1b[0m', '==> [Setup] Initializing Foydalanuvchi loyihasi environment...');
+console.log('\x1b[36m%s\x1b[0m', '==> [Setup] Foydalanuvchi loyihasi muhitini ishga tushirish...');
 
-// 1. Ensure var/ and config/jwt/ directories exist
 if (!fs.existsSync(varDir)) {
     fs.mkdirSync(varDir, { recursive: true });
 }
@@ -22,9 +21,8 @@ if (!fs.existsSync(jwtDir)) {
     fs.mkdirSync(jwtDir, { recursive: true });
 }
 
-// 2. Ensure JWT Keys exist
 if (!fs.existsSync(privateKeyFile) || !fs.existsSync(publicKeyFile)) {
-    console.log('\x1b[33m%s\x1b[0m', '==> [Setup] Generating Lexik JWT keypair...');
+    console.log('\x1b[33m%s\x1b[0m', '==> [Setup] Lexik JWT kalit juftligini yaratish...');
     try {
         const passphrase = 'a5b4871c63490ecabbab689b7a96c6dea8a556a7ec1ba159fdaa7389d18bfa72';
         const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
@@ -43,37 +41,36 @@ if (!fs.existsSync(privateKeyFile) || !fs.existsSync(publicKeyFile)) {
 
         fs.writeFileSync(privateKeyFile, privateKey, { mode: 0o600 });
         fs.writeFileSync(publicKeyFile, publicKey, { mode: 0o644 });
-        console.log('\x1b[32m%s\x1b[0m', '==> [Setup] JWT keypair successfully created.');
+        console.log('\x1b[32m%s\x1b[0m', '==> [Setup] JWT kalit juftligi muvaffaqiyatli yaratildi.');
     } catch (err) {
-        console.warn('==> [Setup] Node keygen warning:', err.message);
+        console.warn('==> [Setup] Node kalit yaratish ogohlantirish:', err.message);
     }
 }
 
-// 3. Ensure SQLite schema and demo data exist
 const needsDbInit = !fs.existsSync(dbFile) || fs.statSync(dbFile).size === 0;
 
 if (needsDbInit) {
-    console.log('\x1b[33m%s\x1b[0m', '==> [Setup] Initializing SQLite database schema...');
+    console.log('\x1b[33m%s\x1b[0m', '==> [Setup] SQLite maʼlumotlar bazasi sxemasini ishga tushirish...');
     try {
         execSync('php bin/console doctrine:schema:update --force --no-interaction', {
             cwd: rootDir,
             stdio: 'inherit'
         });
     } catch (err) {
-        console.error('\x1b[31m%s\x1b[0m', '==> [Setup] Schema update error:', err.message);
+        console.error('\x1b[31m%s\x1b[0m', '==> [Setup] Sxemani yangilash xatosi:', err.message);
     }
 
-    console.log('\x1b[33m%s\x1b[0m', '==> [Setup] Seeding realistic demo data...');
+    console.log('\x1b[33m%s\x1b[0m', '==> [Setup] Demo maʼlumotlarini yuklash...');
     try {
         execSync('php bin/console app:seed-demo --no-interaction', {
             cwd: rootDir,
             stdio: 'inherit'
         });
     } catch (err) {
-        console.error('\x1b[31m%s\x1b[0m', '==> [Setup] Seeding error:', err.message);
+        console.error('\x1b[31m%s\x1b[0m', '==> [Setup] Demo maʼlumotlarni yuklash xatosi:', err.message);
     }
 } else {
-    console.log('\x1b[32m%s\x1b[0m', '==> [Setup] Database var/data.db already present.');
+    console.log('\x1b[32m%s\x1b[0m', '==> [Setup] var/data.db maʼlumotlar bazasi allaqachon mavjud.');
 }
 
-console.log('\x1b[32m%s\x1b[0m', '==> [Setup] Environment successfully prepared!\n');
+console.log('\x1b[32m%s\x1b[0m', '==> [Setup] Muhit muvaffaqiyatli tayyorlandi!\n');

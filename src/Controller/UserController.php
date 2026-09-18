@@ -81,15 +81,15 @@ class UserController extends AbstractController
         $bio = trim($payload['bio'] ?? '');
 
         if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return $this->errorResponse($request, 'Please provide a valid email address.');
+            return $this->errorResponse($request, 'Iltimos, toʻgʻri email manzilini kiriting.');
         }
 
         if (!$firstName || !$lastName) {
-            return $this->errorResponse($request, 'First name and Last name are required.');
+            return $this->errorResponse($request, 'Ism va familiya maydonlari toʻldirilishi shart.');
         }
 
         if ($userRepository->findOneBy(['email' => $email])) {
-            return $this->errorResponse($request, 'A user with this email address already exists.');
+            return $this->errorResponse($request, 'Ushbu email manzili bilan foydalanuvchi allaqachon mavjud.');
         }
 
         $user = new User();
@@ -115,12 +115,12 @@ class UserController extends AbstractController
         if ($this->isJsonExpected($request)) {
             return new JsonResponse([
                 'success' => true,
-                'message' => 'User successfully created!',
+                'message' => 'Foydalanuvchi muvaffaqiyatli yaratildi!',
                 'user' => $this->serializeUser($user),
             ], Response::HTTP_CREATED);
         }
 
-        $this->addFlash('success', 'User successfully created!');
+        $this->addFlash('success', 'Foydalanuvchi muvaffaqiyatli yaratildi!');
         return $this->redirectToRoute('app_user_index');
     }
 
@@ -146,16 +146,16 @@ class UserController extends AbstractController
         $bio = isset($payload['bio']) ? trim($payload['bio']) : $user->getBio();
 
         if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return $this->errorResponse($request, 'Please provide a valid email address.');
+            return $this->errorResponse($request, 'Iltimos, toʻgʻri email manzilini kiriting.');
         }
 
         if (!$firstName || !$lastName) {
-            return $this->errorResponse($request, 'First name and Last name are required.');
+            return $this->errorResponse($request, 'Ism va familiya maydonlari toʻldirilishi shart.');
         }
 
         $existingUser = $userRepository->findOneBy(['email' => $email]);
         if ($existingUser && $existingUser->getId() !== $user->getId()) {
-            return $this->errorResponse($request, 'A user with this email address already exists.');
+            return $this->errorResponse($request, 'Ushbu email manzili bilan foydalanuvchi allaqachon mavjud.');
         }
 
         $user->setEmail($email);
@@ -183,12 +183,12 @@ class UserController extends AbstractController
         if ($this->isJsonExpected($request)) {
             return new JsonResponse([
                 'success' => true,
-                'message' => 'User updated successfully!',
+                'message' => 'Foydalanuvchi maʼlumotlari muvaffaqiyatli yangilandi!',
                 'user' => $this->serializeUser($user),
             ]);
         }
 
-        $this->addFlash('success', 'User updated successfully!');
+        $this->addFlash('success', 'Foydalanuvchi maʼlumotlari muvaffaqiyatli yangilandi!');
         return $this->redirectToRoute('app_user_index');
     }
 
@@ -202,19 +202,18 @@ class UserController extends AbstractController
         if ($this->isJsonExpected($request)) {
             return new JsonResponse([
                 'success' => true,
-                'message' => 'User deleted successfully!',
+                'message' => 'Foydalanuvchi muvaffaqiyatli oʻchirildi!',
                 'deletedId' => $userId,
             ]);
         }
 
-        $this->addFlash('success', 'User deleted successfully!');
+        $this->addFlash('success', 'Foydalanuvchi muvaffaqiyatli oʻchirildi!');
         return $this->redirectToRoute('app_user_index');
     }
 
     #[Route(path: '/users/reset-demo', name: 'app_user_reset_demo', methods: ['POST'])]
     public function resetDemo(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher): Response
     {
-        // Clear all users
         $repo = $em->getRepository(User::class);
         $existing = $repo->findAll();
         foreach ($existing as $u) {
@@ -231,10 +230,10 @@ class UserController extends AbstractController
                 'password' => 'admin123',
                 'roles' => ['ROLE_ADMIN'],
                 'company' => 'Astracode Tech',
-                'position' => 'Lead Software Architect',
+                'position' => 'Bosh dasturiy taʼminot arxitektori',
                 'phone' => '+998 90 123 45 67',
                 'status' => 'ACTIVE',
-                'bio' => 'System architect and lead engineer at Astracode Tech with 10+ years of backend development experience.',
+                'bio' => 'Astracode Tech da tizim arxitektori va bosh muhandis, 10+ yillik backend ishlab chiqish tajribasiga ega.',
             ],
             [
                 'firstName' => 'Dilnoza',
@@ -243,10 +242,10 @@ class UserController extends AbstractController
                 'password' => 'manager123',
                 'roles' => ['ROLE_MANAGER'],
                 'company' => 'Astracode Tech',
-                'position' => 'Product Director',
+                'position' => 'Mahsulot direktori',
                 'phone' => '+998 93 456 78 90',
                 'status' => 'ACTIVE',
-                'bio' => 'Oversees product strategy, user experience roadmaps, and cross-functional agile teams.',
+                'bio' => 'Mahsulot strategiyasi, foydalanuvchi tajribasi yoʻl xaritalari va turkich funktsiyali jamoalarni boshqaradi.',
             ],
             [
                 'firstName' => 'Jamshid',
@@ -255,10 +254,10 @@ class UserController extends AbstractController
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'FinSoft Innovations',
-                'position' => 'Senior Full-Stack Engineer',
+                'position' => 'Katta Full-Stack muhandisi',
                 'phone' => '+998 94 321 65 43',
                 'status' => 'ACTIVE',
-                'bio' => 'Specializes in reactive web frontends and high-load microservice APIs.',
+                'bio' => 'Reaktiv veb interfeyslar va yuqori yukli mikroservis APIlar boʻyicha ixtisoslashgan.',
             ],
             [
                 'firstName' => 'Elena',
@@ -267,10 +266,10 @@ class UserController extends AbstractController
                 'password' => 'user123',
                 'roles' => ['ROLE_MANAGER'],
                 'company' => 'Global Logistics Ltd',
-                'position' => 'Operations Manager',
+                'position' => 'Operatsiyalar menejeri',
                 'phone' => '+998 91 789 01 23',
                 'status' => 'ACTIVE',
-                'bio' => 'Coordinates regional supply chain workflows and digital transformation initiatives.',
+                'bio' => 'Mintaqaviy taʼminot zanjiri jarayonlari va raqamli transformatsiya loyihalarini muvofiqlashtiradi.',
             ],
             [
                 'firstName' => 'Sardor',
@@ -279,10 +278,10 @@ class UserController extends AbstractController
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'Astracode Tech',
-                'position' => 'Backend Developer',
+                'position' => 'Backend dasturchi',
                 'phone' => '+998 97 111 22 33',
                 'status' => 'ACTIVE',
-                'bio' => 'Passionate about Symfony, API Platform, and event-driven architectures.',
+                'bio' => 'Symfony, API Platform va hodisaga asoslangan arxitekturalar qiziqadi.',
             ],
             [
                 'firstName' => 'Malika',
@@ -291,10 +290,10 @@ class UserController extends AbstractController
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'FinSoft Innovations',
-                'position' => 'Frontend Developer',
+                'position' => 'Frontend dasturchi',
                 'phone' => '+998 90 999 88 77',
                 'status' => 'ACTIVE',
-                'bio' => 'Creates accessible, responsive web interfaces with modern CSS and JavaScript.',
+                'bio' => 'Zamonaviy CSS va JavaScript yordamida qulay, moslashuvchan veb interfeyslar yaratadi.',
             ],
             [
                 'firstName' => 'Bobur',
@@ -303,10 +302,10 @@ class UserController extends AbstractController
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'TechUz Innovations',
-                'position' => 'DevOps & Cloud Engineer',
+                'position' => 'DevOps va Cloud muhandisi',
                 'phone' => '+998 99 555 44 33',
                 'status' => 'ACTIVE',
-                'bio' => 'Automates CI/CD pipelines, Kubernetes clusters, and cloud observability.',
+                'bio' => 'CI/CD konveyerlarini, Kubernetes klasterlarini va bulut kuzatuvini avtomatlashtiradi.',
             ],
             [
                 'firstName' => 'Zarina',
@@ -315,10 +314,10 @@ class UserController extends AbstractController
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'Astracode Tech',
-                'position' => 'UI/UX Designer',
+                'position' => 'UI/UX dizayner',
                 'phone' => '+998 93 777 66 55',
                 'status' => 'PENDING',
-                'bio' => 'Crafts user journey maps, design systems, and modern SaaS product interfaces.',
+                'bio' => 'Foydalanuvchi sayohat xaritalari, dizayn tizimlari va zamonaviy SaaS mahsulot interfeyslarini ishlab chiqadi.',
             ],
             [
                 'firstName' => 'Otabek',
@@ -327,10 +326,10 @@ class UserController extends AbstractController
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'TechUz Innovations',
-                'position' => 'QA Automation Lead',
+                'position' => 'QA Avtomatlashtirish boshligʻi',
                 'phone' => '+998 94 222 33 44',
                 'status' => 'INACTIVE',
-                'bio' => 'Builds end-to-end automated testing frameworks and ensures software quality standards.',
+                'bio' => 'Toʻliq avtomatlashtirilgan testlash tizimlarini quradi va dasturiy taʼminot sifatini taʼminlaydi.',
             ],
             [
                 'firstName' => 'Nilufar',
@@ -339,10 +338,10 @@ class UserController extends AbstractController
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'FinSoft Innovations',
-                'position' => 'Data Analyst',
+                'position' => 'Maʼlumotlar tahlilchisi',
                 'phone' => '+998 98 444 55 66',
                 'status' => 'ACTIVE',
-                'bio' => 'Turns business data into actionable dashboards and predictive statistical models.',
+                'bio' => 'Biznes maʼlumotlarini amaliy dashboardlarga va bashorat qiluvchi statistik modellarga aylantiradi.',
             ],
             [
                 'firstName' => 'Azizbek',
@@ -351,10 +350,10 @@ class UserController extends AbstractController
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'Digital Systems',
-                'position' => 'System Administrator',
+                'position' => 'Tizim administratori',
                 'phone' => '+998 90 333 22 11',
                 'status' => 'PENDING',
-                'bio' => 'Manages high-availability server infrastructure, security audits, and backups.',
+                'bio' => 'Yuqori mavjud server infratuzilmasini, xavfsizlik auditlarini va zaxira nusxalarini boshqaradi.',
             ],
             [
                 'firstName' => 'Shahzod',
@@ -363,10 +362,10 @@ class UserController extends AbstractController
                 'password' => 'user123',
                 'roles' => ['ROLE_USER'],
                 'company' => 'Astracode Tech',
-                'position' => 'Cybersecurity Analyst',
+                'position' => 'Kiberxavfsizlik tahlilchisi',
                 'phone' => '+998 91 666 77 88',
                 'status' => 'ACTIVE',
-                'bio' => 'Focuses on penetration testing, identity management, and API access security.',
+                'bio' => 'Penetratsiyani sinovdan oʻtkazish, identifikatorlarni boshqarish va API kirish xavfsizligiga eʼtibor qaratadi.',
             ],
         ];
 
@@ -391,11 +390,11 @@ class UserController extends AbstractController
         if ($this->isJsonExpected($request)) {
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Demo data restored with 12 users!',
+                'message' => 'Demo maʼlumotlar 12 ta foydalanuvchi bilan tiklandi!',
             ]);
         }
 
-        $this->addFlash('success', 'Demo data successfully reset!');
+        $this->addFlash('success', 'Demo maʼlumotlar muvaffaqiyatli tiklandi!');
         return $this->redirectToRoute('app_user_index');
     }
 

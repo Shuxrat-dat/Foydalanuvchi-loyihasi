@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50">
+<html lang="uz" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Foydalanuvchi loyihasi — User Management{% endblock %}</title>
+    <title>{% block title %}Foydalanuvchi loyihasi — Foydalanuvchilarni boshqarish{% endblock %}</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>👥</text></svg>">
     
     <!-- Tailwind CSS CDN -->
@@ -59,7 +59,7 @@
                     <nav class="hidden md:flex ml-8 space-x-1">
                         <a href="{{ path('app_user_index') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-600 hover:bg-slate-100 transition-colors flex items-center space-x-1.5">
                             <i class="fa-solid fa-table-columns text-slate-400"></i>
-                            <span>Dashboard</span>
+                            <span>Bosh sahifa</span>
                         </a>
                         <a href="/api" target="_blank" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-600 hover:bg-slate-100 transition-colors flex items-center space-x-1.5">
                             <i class="fa-solid fa-code text-indigo-500"></i>
@@ -84,7 +84,7 @@
                             <div class="w-9 h-9 rounded-full bg-brand-100 text-brand-700 font-bold flex items-center justify-center border border-brand-200 shadow-sm text-sm">
                                 {{ app.user.initials }}
                             </div>
-                            <a href="{{ path('app_logout') }}" title="Logout" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
+                            <a href="{{ path('app_logout') }}" title="Chiqish" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
                                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
                             </a>
                         </div>
@@ -92,7 +92,7 @@
                         <div class="flex items-center space-x-2">
                             <a href="{{ path('app_login') }}" class="inline-flex items-center space-x-1.5 px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors">
                                 <i class="fa-solid fa-arrow-right-to-bracket text-slate-400"></i>
-                                <span>Sign In</span>
+                                <span>Kirish</span>
                             </a>
                         </div>
                     {% endif %}
@@ -127,7 +127,7 @@
     <footer class="bg-white border-t border-slate-200 mt-auto py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-3">
             <div>
-                <span class="font-semibold text-slate-700">Foydalanuvchi loyihasi</span> &copy; {{ "now"|date("Y") }}. All rights reserved.
+                <span class="font-semibold text-slate-700">Foydalanuvchi loyihasi</span> &copy; {{ "now"|date("Y") }}. Barcha huquqlar himoyalangan.
             </div>
             <div class="flex items-center space-x-4">
                 <span class="flex items-center space-x-1">
@@ -137,12 +137,12 @@
                 <span class="text-slate-300">•</span>
                 <span class="flex items-center space-x-1">
                     <i class="fa-solid fa-database text-blue-500"></i>
-                    <span>SQLite (Zero-Config)</span>
+                    <span>SQLite (Konfiguratsiyasiz)</span>
                 </span>
                 <span class="text-slate-300">•</span>
                 <a href="/api" target="_blank" class="hover:text-brand-600 transition-colors flex items-center space-x-1 font-medium">
                     <i class="fa-solid fa-book-open text-indigo-500"></i>
-                    <span>API Docs</span>
+                    <span>API Hujjatlari</span>
                 </a>
             </div>
         </div>

@@ -1,23 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dashboard — Foydalanuvchi loyihasi{% endblock %}
+{% block title %}Bosh sahifa — Foydalanuvchi loyihasi{% endblock %}
 
 {% block body %}
 <!-- Page Header & Statistics Cards -->
 <div class="mb-8">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">User Management</h1>
-            <p class="text-sm text-slate-500 mt-1">Manage system accounts, permissions, and company personnel.</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Foydalanuvchilarni boshqarish</h1>
+            <p class="text-sm text-slate-500 mt-1">Tizim akkauntlarini, huquqlarni va korxona xodimlarini boshqaring.</p>
         </div>
         <div class="flex items-center space-x-3">
             <button onclick="resetDemoData()" id="btn-reset-demo" class="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-sm font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 active:scale-95 transition-all shadow-sm">
                 <i class="fa-solid fa-arrows-rotate text-slate-500" id="reset-icon"></i>
-                <span>Reset Demo</span>
+                <span>Demo maʼlumotlarni tiklash</span>
             </button>
             <button onclick="openAddModal()" class="inline-flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 active:scale-95 transition-all shadow-md shadow-brand-500/20">
                 <i class="fa-solid fa-user-plus text-xs"></i>
-                <span>Add User</span>
+                <span>Foydalanuvchi qoʻshish</span>
             </button>
         </div>
     </div>
@@ -26,10 +26,10 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Users</p>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Jami foydalanuvchilar</p>
                 <h3 class="text-2xl font-bold text-slate-900 mt-1" id="stat-total">{{ stats.total }}</h3>
                 <span class="text-xs text-emerald-600 font-medium flex items-center mt-1">
-                    <i class="fa-solid fa-chart-simple mr-1"></i> Registered in DB
+                    <i class="fa-solid fa-chart-simple mr-1"></i> Baza roʻyxatida
                 </span>
             </div>
             <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
@@ -39,10 +39,10 @@
 
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Accounts</p>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Faol akkauntlar</p>
                 <h3 class="text-2xl font-bold text-emerald-600 mt-1" id="stat-active">{{ stats.active }}</h3>
                 <span class="text-xs text-slate-500 font-medium flex items-center mt-1">
-                    <i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> Ready for login
+                    <i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> Kirishga tayyor
                 </span>
             </div>
             <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
@@ -52,10 +52,10 @@
 
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Administrators</p>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Administratorlar</p>
                 <h3 class="text-2xl font-bold text-purple-600 mt-1" id="stat-admins">{{ stats.admins }}</h3>
                 <span class="text-xs text-slate-500 font-medium flex items-center mt-1">
-                    <i class="fa-solid fa-shield-halved text-purple-500 mr-1"></i> Full privileges
+                    <i class="fa-solid fa-shield-halved text-purple-500 mr-1"></i> Toʻliq huquqlar
                 </span>
             </div>
             <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
@@ -65,10 +65,10 @@
 
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pending Activation</p>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Faollashtirish kutilmoqda</p>
                 <h3 class="text-2xl font-bold text-amber-600 mt-1" id="stat-pending">{{ stats.pending }}</h3>
                 <span class="text-xs text-slate-500 font-medium flex items-center mt-1">
-                    <i class="fa-solid fa-clock text-amber-500 mr-1"></i> Awaiting verification
+                    <i class="fa-solid fa-clock text-amber-500 mr-1"></i> Tekshiruv kutilmoqda
                 </span>
             </div>
             <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
@@ -78,39 +78,37 @@
     </div>
 </div>
 
-<!-- Controls & Table Card -->
 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-    <!-- Filter Toolbar -->
     <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div class="relative flex-1 max-w-md">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
                 <i class="fa-solid fa-magnifying-glass text-sm"></i>
             </span>
-            <input type="text" id="filter-search" oninput="filterTable()" placeholder="Search by name, email, company, position..." class="w-full pl-10 pr-4 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all placeholder:text-slate-400" value="{{ query }}">
+            <input type="text" id="filter-search" oninput="filterTable()" placeholder="Ism, email, korxona yoki lavozim boʻyicha qidirish..." class="w-full pl-10 pr-4 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all placeholder:text-slate-400" value="{{ query }}">
         </div>
 
         <div class="flex flex-wrap items-center gap-2.5">
             <div class="flex items-center space-x-2 text-xs font-medium text-slate-500">
                 <i class="fa-solid fa-filter text-slate-400"></i>
-                <span>Filters:</span>
+                <span>Filtrlar:</span>
             </div>
             <select id="filter-role" onchange="filterTable()" class="py-2 pl-3 pr-8 text-xs font-medium bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700">
-                <option value="ALL" {% if current_role == 'ALL' %}selected{% endif %}>All Roles</option>
-                <option value="ROLE_ADMIN" {% if current_role == 'ROLE_ADMIN' %}selected{% endif %}>Admins</option>
-                <option value="ROLE_MANAGER" {% if current_role == 'ROLE_MANAGER' %}selected{% endif %}>Managers</option>
-                <option value="ROLE_USER" {% if current_role == 'ROLE_USER' %}selected{% endif %}>Users</option>
+                <option value="ALL" {% if current_role == 'ALL' %}selected{% endif %}>Barcha rollar</option>
+                <option value="ROLE_ADMIN" {% if current_role == 'ROLE_ADMIN' %}selected{% endif %}>Administratorlar</option>
+                <option value="ROLE_MANAGER" {% if current_role == 'ROLE_MANAGER' %}selected{% endif %}>Menejjerlar</option>
+                <option value="ROLE_USER" {% if current_role == 'ROLE_USER' %}selected{% endif %}>Foydalanuvchilar</option>
             </select>
 
             <select id="filter-status" onchange="filterTable()" class="py-2 pl-3 pr-8 text-xs font-medium bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700">
-                <option value="ALL" {% if current_status == 'ALL' %}selected{% endif %}>All Statuses</option>
-                <option value="ACTIVE" {% if current_status == 'ACTIVE' %}selected{% endif %}>Active</option>
-                <option value="PENDING" {% if current_status == 'PENDING' %}selected{% endif %}>Pending</option>
-                <option value="INACTIVE" {% if current_status == 'INACTIVE' %}selected{% endif %}>Inactive</option>
+                <option value="ALL" {% if current_status == 'ALL' %}selected{% endif %}>Barcha holatlar</option>
+                <option value="ACTIVE" {% if current_status == 'ACTIVE' %}selected{% endif %}>Faol</option>
+                <option value="PENDING" {% if current_status == 'PENDING' %}selected{% endif %}>Kutilmoqda</option>
+                <option value="INACTIVE" {% if current_status == 'INACTIVE' %}selected{% endif %}>Nofaol</option>
             </select>
 
             <a href="/api" target="_blank" class="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-colors border border-indigo-200">
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                <span>Open in Swagger</span>
+                <span>Swaggerda ochish</span>
             </a>
         </div>
     </div>
@@ -120,13 +118,13 @@
         <table class="w-full text-left border-collapse" id="users-table">
             <thead>
                 <tr class="border-b border-slate-200 bg-slate-50 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                    <th class="py-3.5 px-4 sm:px-6">User</th>
-                    <th class="py-3.5 px-4">Role</th>
-                    <th class="py-3.5 px-4">Status</th>
-                    <th class="py-3.5 px-4 hidden md:table-cell">Company & Position</th>
-                    <th class="py-3.5 px-4 hidden lg:table-cell">Phone</th>
-                    <th class="py-3.5 px-4 hidden xl:table-cell">Created</th>
-                    <th class="py-3.5 px-4 sm:px-6 text-right">Actions</th>
+                    <th class="py-3.5 px-4 sm:px-6">Foydalanuvchi</th>
+                    <th class="py-3.5 px-4">Rol</th>
+                    <th class="py-3.5 px-4">Holat</th>
+                    <th class="py-3.5 px-4 hidden md:table-cell">Korxona & Lavozim</th>
+                    <th class="py-3.5 px-4 hidden lg:table-cell">Telefon</th>
+                    <th class="py-3.5 px-4 hidden xl:table-cell">Yaratilgan</th>
+                    <th class="py-3.5 px-4 sm:px-6 text-right">Amallar</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 text-sm" id="users-tbody">
@@ -167,26 +165,26 @@
                                 </span>
                             {% elseif user.primaryRole == 'ROLE_MANAGER' %}
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                                    <i class="fa-solid fa-briefcase mr-1 text-[10px]"></i> Manager
+                                    <i class="fa-solid fa-briefcase mr-1 text-[10px]"></i> Menejjer
                                 </span>
                             {% else %}
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                                    <i class="fa-solid fa-user mr-1 text-[10px]"></i> User
+                                    <i class="fa-solid fa-user mr-1 text-[10px]"></i> Foydalanuvchi
                                 </span>
                             {% endif %}
                         </td>
                         <td class="py-4 px-4">
                             {% if user.status == 'ACTIVE' %}
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Active
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Faol
                                 </span>
                             {% elseif user.status == 'PENDING' %}
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span> Pending
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span> Kutilmoqda
                                 </span>
                             {% else %}
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5"></span> Inactive
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5"></span> Nofaol
                                 </span>
                             {% endif %}
                         </td>
@@ -198,17 +196,17 @@
                             {{ user.phone|default('—') }}
                         </td>
                         <td class="py-4 px-4 hidden xl:table-cell text-xs text-slate-400">
-                            {{ user.createdAt ? user.createdAt|date('M d, Y') : '—' }}
+                            {{ user.createdAt ? user.createdAt|date('d.m.Y') : '—' }}
                         </td>
                         <td class="py-4 px-4 sm:px-6 text-right">
                             <div class="flex items-center justify-end space-x-1">
-                                <button onclick="viewUser({{ user.id }})" title="View Details" class="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors">
+                                <button onclick="viewUser({{ user.id }})" title="Maʼlumotlarni koʻrish" class="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors">
                                     <i class="fa-solid fa-eye text-sm"></i>
                                 </button>
-                                <button onclick="openEditModal({{ user.id }})" title="Edit User" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                <button onclick="openEditModal({{ user.id }})" title="Tahrirlash" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                                     <i class="fa-solid fa-pen-to-square text-sm"></i>
                                 </button>
-                                <button onclick="confirmDelete({{ user.id }}, '{{ user.fullName|e('js') }}')" title="Delete User" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
+                                <button onclick="confirmDelete({{ user.id }}, '{{ user.fullName|e('js') }}')" title="Oʻchirish" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
                                     <i class="fa-solid fa-trash text-sm"></i>
                                 </button>
                             </div>
@@ -218,8 +216,8 @@
                     <tr id="empty-state-row">
                         <td colspan="7" class="py-12 text-center text-slate-400">
                             <i class="fa-solid fa-user-slash text-4xl mb-3 text-slate-300"></i>
-                            <p class="text-base font-medium text-slate-600">No users found</p>
-                            <p class="text-xs text-slate-400 mt-1">Try resetting demo data or creating a new user.</p>
+                            <p class="text-base font-medium text-slate-600">Foydalanuvchilar topilmadi</p>
+                            <p class="text-xs text-slate-400 mt-1">Demo maʼlumotlarni tiklab koʻring yoki yangi foydalanuvchi yarating.</p>
                         </td>
                     </tr>
                 {% endfor %}
@@ -230,23 +228,20 @@
     <!-- Table Footer / Count -->
     <div class="p-4 border-t border-slate-200 bg-slate-50/50 flex items-center justify-between text-xs text-slate-500">
         <div>
-            Showing <span id="visible-count" class="font-semibold text-slate-700">{{ users|length }}</span> of <span id="total-count" class="font-semibold text-slate-700">{{ users|length }}</span> users
+            Koʻrsatilmoqda: <span id="visible-count" class="font-semibold text-slate-700">{{ users|length }}</span> / <span id="total-count" class="font-semibold text-slate-700">{{ users|length }}</span> ta foydalanuvchi
         </div>
         <div class="text-right">
-            <span>Synchronized with SQLite</span>
+            <span>SQLite bilan sinxronlashtirilgan</span>
         </div>
     </div>
 </div>
 
-<!-- ================= MODALS ================= -->
-
-<!-- 1. View User Details Modal -->
 <div id="modal-view" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm hidden">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 transform transition-all">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
             <h3 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
                 <i class="fa-solid fa-address-card text-brand-600"></i>
-                <span>User Profile</span>
+                <span>Foydalanuvchi profili</span>
             </h3>
             <button onclick="closeModal('modal-view')" class="text-slate-400 hover:text-slate-600 p-1">
                 <i class="fa-solid fa-xmark text-lg"></i>
@@ -258,7 +253,7 @@
                     SM
                 </div>
                 <div>
-                    <h4 id="view-name" class="text-xl font-bold text-slate-900">User Name</h4>
+                    <h4 id="view-name" class="text-xl font-bold text-slate-900">Foydalanuvchi ismi</h4>
                     <p id="view-email" class="text-sm text-slate-500">user@example.com</p>
                     <div class="flex items-center space-x-2 mt-1.5" id="view-badges"></div>
                 </div>
@@ -266,43 +261,42 @@
 
             <div class="grid grid-cols-2 gap-3 pt-2 text-sm">
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                    <span class="text-xs text-slate-400 font-medium block">Company</span>
+                    <span class="text-xs text-slate-400 font-medium block">Korxona</span>
                     <span id="view-company" class="font-semibold text-slate-800 mt-0.5 block">—</span>
                 </div>
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                    <span class="text-xs text-slate-400 font-medium block">Position</span>
+                    <span class="text-xs text-slate-400 font-medium block">Lavozim</span>
                     <span id="view-position" class="font-semibold text-slate-800 mt-0.5 block">—</span>
                 </div>
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                    <span class="text-xs text-slate-400 font-medium block">Phone</span>
+                    <span class="text-xs text-slate-400 font-medium block">Telefon</span>
                     <span id="view-phone" class="font-semibold text-slate-800 mt-0.5 block">—</span>
                 </div>
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                    <span class="text-xs text-slate-400 font-medium block">User ID</span>
+                    <span class="text-xs text-slate-400 font-medium block">Foydalanuvchi ID</span>
                     <span id="view-id" class="font-semibold text-slate-800 mt-0.5 block">#1</span>
                 </div>
             </div>
 
             <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 text-sm">
-                <span class="text-xs text-slate-400 font-medium block mb-1">Biography / Notes</span>
-                <p id="view-bio" class="text-slate-600 italic text-xs leading-relaxed">No biography provided.</p>
+                <span class="text-xs text-slate-400 font-medium block mb-1">Biografiya / Izohlar</span>
+                <p id="view-bio" class="text-slate-600 italic text-xs leading-relaxed">Biografiya taqdim etilmagan.</p>
             </div>
         </div>
         <div class="pt-3 border-t border-slate-100 flex justify-end">
             <button onclick="closeModal('modal-view')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
-                Close
+                Yopish
             </button>
         </div>
     </div>
 </div>
 
-<!-- 2. Add User Modal -->
 <div id="modal-add" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm hidden">
     <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 transform transition-all">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
             <h3 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
                 <i class="fa-solid fa-user-plus text-brand-600"></i>
-                <span>Add New User</span>
+                <span>Yangi foydalanuvchi qoʻshish</span>
             </h3>
             <button onclick="closeModal('modal-add')" class="text-slate-400 hover:text-slate-600 p-1">
                 <i class="fa-solid fa-xmark text-lg"></i>
@@ -311,12 +305,12 @@
         <form id="form-add-user" onsubmit="submitAddUser(event)" class="py-4 space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">First Name *</label>
-                    <input type="text" name="firstName" required placeholder="e.g. Jasur" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Ism *</label>
+                    <input type="text" name="firstName" required placeholder="Masalan: Jasur" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Last Name *</label>
-                    <input type="text" name="lastName" required placeholder="e.g. Usmonov" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Familiya *</label>
+                    <input type="text" name="lastName" required placeholder="Masalan: Usmonov" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
             </div>
 
@@ -326,69 +320,68 @@
                     <input type="email" name="email" required placeholder="jasur.usmonov@example.com" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Phone</label>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Telefon</label>
                     <input type="text" name="phone" placeholder="+998 90 123 45 67" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Company</label>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Korxona</label>
                     <input type="text" name="company" placeholder="Astracode Tech" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Position</label>
-                    <input type="text" name="position" placeholder="Software Engineer" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Lavozim</label>
+                    <input type="text" name="position" placeholder="Dasturiy taʼminot muhandisi" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Role</label>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Rol</label>
                     <select name="role" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500">
-                        <option value="ROLE_USER">User</option>
-                        <option value="ROLE_MANAGER">Manager</option>
+                        <option value="ROLE_USER">Foydalanuvchi</option>
+                        <option value="ROLE_MANAGER">Menejjer</option>
                         <option value="ROLE_ADMIN">Admin</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Status</label>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Holat</label>
                     <select name="status" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500">
-                        <option value="ACTIVE">Active</option>
-                        <option value="PENDING">Pending</option>
-                        <option value="INACTIVE">Inactive</option>
+                        <option value="ACTIVE">Faol</option>
+                        <option value="PENDING">Kutilmoqda</option>
+                        <option value="INACTIVE">Nofaol</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Password</label>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Parol</label>
                     <input type="password" name="password" value="user123" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Bio / Notes</label>
-                <textarea name="bio" rows="2" placeholder="Brief notes about the employee or account..." class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500"></textarea>
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Bio / Izohlar</label>
+                <textarea name="bio" rows="2" placeholder="Xodim yoki akkaunt haqida qisqacha izoh..." class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500"></textarea>
             </div>
 
             <div class="pt-3 border-t border-slate-100 flex justify-end space-x-3">
                 <button type="button" onclick="closeModal('modal-add')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
-                    Cancel
+                    Bekor qilish
                 </button>
                 <button type="submit" id="btn-submit-add" class="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-md shadow-brand-500/20">
-                    Create User
+                    Foydalanuvchi yaratish
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- 3. Edit User Modal -->
 <div id="modal-edit" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm hidden">
     <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 transform transition-all">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
             <h3 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
                 <i class="fa-solid fa-user-pen text-blue-600"></i>
-                <span>Edit User</span>
+                <span>Foydalanuvchini tahrirlash</span>
             </h3>
             <button onclick="closeModal('modal-edit')" class="text-slate-400 hover:text-slate-600 p-1">
                 <i class="fa-solid fa-xmark text-lg"></i>
@@ -399,11 +392,11 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">First Name *</label>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Ism *</label>
                     <input type="text" id="edit-firstName" name="firstName" required class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Last Name *</label>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Familiya *</label>
                     <input type="text" id="edit-lastName" name="lastName" required class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
             </div>
@@ -414,80 +407,79 @@
                     <input type="email" id="edit-email" name="email" required class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Phone</label>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Telefon</label>
                     <input type="text" id="edit-phone" name="phone" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Company</label>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Korxona</label>
                     <input type="text" id="edit-company" name="company" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Position</label>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Lavozim</label>
                     <input type="text" id="edit-position" name="position" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Role</label>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Rol</label>
                     <select id="edit-role" name="role" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500">
-                        <option value="ROLE_USER">User</option>
-                        <option value="ROLE_MANAGER">Manager</option>
+                        <option value="ROLE_USER">Foydalanuvchi</option>
+                        <option value="ROLE_MANAGER">Menejjer</option>
                         <option value="ROLE_ADMIN">Admin</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Status</label>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Holat</label>
                     <select id="edit-status" name="status" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500">
-                        <option value="ACTIVE">Active</option>
-                        <option value="PENDING">Pending</option>
-                        <option value="INACTIVE">Inactive</option>
+                        <option value="ACTIVE">Faol</option>
+                        <option value="PENDING">Kutilmoqda</option>
+                        <option value="INACTIVE">Nofaol</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">New Password</label>
-                    <input type="password" id="edit-password" name="password" placeholder="Leave blank to keep" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Yangi parol</label>
+                    <input type="password" id="edit-password" name="password" placeholder="Oʻzgartirmaslik uchun boʻsh qoldiring" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                 </div>
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Bio / Notes</label>
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Bio / Izohlar</label>
                 <textarea id="edit-bio" name="bio" rows="2" class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500"></textarea>
             </div>
 
             <div class="pt-3 border-t border-slate-100 flex justify-end space-x-3">
                 <button type="button" onclick="closeModal('modal-edit')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
-                    Cancel
+                    Bekor qilish
                 </button>
                 <button type="submit" id="btn-submit-edit" class="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-md shadow-blue-500/20">
-                    Save Changes
+                    Oʻzgarishlarni saqlash
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- 4. Delete Confirmation Modal -->
 <div id="modal-delete" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm hidden">
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 transform transition-all text-center">
         <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-xl mb-4">
             <i class="fa-solid fa-triangle-exclamation"></i>
         </div>
-        <h3 class="text-lg font-bold text-slate-900">Delete User</h3>
+        <h3 class="text-lg font-bold text-slate-900">Foydalanuvchini oʻchirish</h3>
         <p class="text-sm text-slate-500 mt-2">
-            Are you sure you want to delete <span id="delete-user-name" class="font-semibold text-slate-800">this user</span>? This action cannot be undone.
+            <span id="delete-user-name" class="font-semibold text-slate-800">bu foydalanuvchini</span> oʻchirishga ishonchingiz komilmi? Bu amalni bekor qilib boʻlmaydi.
         </p>
         <input type="hidden" id="delete-user-id">
 
         <div class="mt-6 flex items-center justify-center space-x-3">
             <button onclick="closeModal('modal-delete')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
-                Cancel
+                Bekor qilish
             </button>
             <button onclick="executeDelete()" id="btn-confirm-delete" class="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 transition-colors shadow-md shadow-rose-500/20">
-                Yes, Delete
+                Ha, oʻchirish
             </button>
         </div>
     </div>
@@ -496,7 +488,6 @@
 
 {% block javascripts %}
 <script>
-    // Modal Helpers
     function openModal(id) {
         document.getElementById(id).classList.remove('hidden');
     }
@@ -505,14 +496,12 @@
         document.getElementById(id).classList.add('hidden');
     }
 
-    // Close on backdrop click or Escape
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             ['modal-view', 'modal-add', 'modal-edit', 'modal-delete'].forEach(closeModal);
         }
     });
 
-    // View User
     function viewUser(id) {
         const row = document.getElementById(`user-row-${id}`);
         if (!row) return;
@@ -524,7 +513,7 @@
         const role = row.dataset.role;
         const status = row.dataset.status;
         const phone = row.dataset.phone || '—';
-        const bio = row.dataset.bio || 'No biography provided.';
+        const bio = row.dataset.bio || 'Biografiya taqdim etilmagan.';
 
         document.getElementById('view-id').innerText = '#' + id;
         document.getElementById('view-name').innerText = name;
@@ -535,30 +524,28 @@
         document.getElementById('view-bio').innerText = bio;
 
         const initials = name.split(' ').map(p => p[0]).join('').substring(0, 2).toUpperCase();
-        document.getElementById('view-avatar').innerText = initials || 'U';
+        document.getElementById('view-avatar').innerText = initials || 'F';
 
         let roleBadge = '';
         if (role === 'ROLE_ADMIN') roleBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">Admin</span>';
-        else if (role === 'ROLE_MANAGER') roleBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">Manager</span>';
-        else roleBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">User</span>';
+        else if (role === 'ROLE_MANAGER') roleBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">Menejjer</span>';
+        else roleBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">Foydalanuvchi</span>';
 
         let statusBadge = '';
-        if (status === 'ACTIVE') statusBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>';
-        else if (status === 'PENDING') statusBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">Pending</span>';
-        else statusBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">Inactive</span>';
+        if (status === 'ACTIVE') statusBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">Faol</span>';
+        else if (status === 'PENDING') statusBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">Kutilmoqda</span>';
+        else statusBadge = '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">Nofaol</span>';
 
         document.getElementById('view-badges').innerHTML = roleBadge + statusBadge;
 
         openModal('modal-view');
     }
 
-    // Open Add Modal
     function openAddModal() {
         document.getElementById('form-add-user').reset();
         openModal('modal-add');
     }
 
-    // Submit Add User
     async function submitAddUser(e) {
         e.preventDefault();
         const form = e.target;
@@ -567,7 +554,7 @@
 
         const btn = document.getElementById('btn-submit-add');
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saqlanmoqda...';
 
         try {
             const res = await fetch('/users/new', {
@@ -581,21 +568,20 @@
 
             const result = await res.json();
             if (!res.ok || !result.success) {
-                throw new Error(result.message || 'Failed to create user');
+                throw new Error(result.message || 'Foydalanuvchi yaratib boʻlmadi');
             }
 
-            showToast(result.message || 'User successfully created!');
+            showToast(result.message || 'Foydalanuvchi muvaffaqiyatli yaratildi!');
             closeModal('modal-add');
             setTimeout(() => window.location.reload(), 500);
         } catch (err) {
             showToast(err.message, 'error');
         } finally {
             btn.disabled = false;
-            btn.innerHTML = 'Create User';
+            btn.innerHTML = 'Foydalanuvchi yaratish';
         }
     }
 
-    // Open Edit Modal
     function openEditModal(id) {
         const row = document.getElementById(`user-row-${id}`);
         if (!row) return;
@@ -619,7 +605,6 @@
         openModal('modal-edit');
     }
 
-    // Submit Edit User
     async function submitEditUser(e) {
         e.preventDefault();
         const form = e.target;
@@ -629,7 +614,7 @@
 
         const btn = document.getElementById('btn-submit-edit');
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saqlanmoqda...';
 
         try {
             const res = await fetch(`/users/${id}/edit`, {
@@ -643,33 +628,31 @@
 
             const result = await res.json();
             if (!res.ok || !result.success) {
-                throw new Error(result.message || 'Failed to update user');
+                throw new Error(result.message || 'Foydalanuvchi maʼlumotlarini yangilab boʻlmadi');
             }
 
-            showToast(result.message || 'User updated successfully!');
+            showToast(result.message || 'Foydalanuvchi maʼlumotlari muvaffaqiyatli yangilandi!');
             closeModal('modal-edit');
             setTimeout(() => window.location.reload(), 500);
         } catch (err) {
             showToast(err.message, 'error');
         } finally {
             btn.disabled = false;
-            btn.innerHTML = 'Save Changes';
+            btn.innerHTML = 'Oʻzgarishlarni saqlash';
         }
     }
 
-    // Confirm Delete
     function confirmDelete(id, name) {
         document.getElementById('delete-user-id').value = id;
         document.getElementById('delete-user-name').innerText = `"${name}"`;
         openModal('modal-delete');
     }
 
-    // Execute Delete
     async function executeDelete() {
         const id = document.getElementById('delete-user-id').value;
         const btn = document.getElementById('btn-confirm-delete');
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Deleting...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Oʻchirilmoqda...';
 
         try {
             const res = await fetch(`/users/${id}/delete`, {
@@ -682,10 +665,10 @@
 
             const result = await res.json();
             if (!res.ok || !result.success) {
-                throw new Error(result.message || 'Failed to delete user');
+                throw new Error(result.message || 'Foydalanuvchini oʻchirib boʻlmadi');
             }
 
-            showToast(result.message || 'User deleted successfully!');
+            showToast(result.message || 'Foydalanuvchi muvaffaqiyatli oʻchirildi!');
             closeModal('modal-delete');
 
             const row = document.getElementById(`user-row-${id}`);
@@ -697,11 +680,10 @@
             showToast(err.message, 'error');
         } finally {
             btn.disabled = false;
-            btn.innerHTML = 'Yes, Delete';
+            btn.innerHTML = 'Ha, oʻchirish';
         }
     }
 
-    // Reset Demo Data
     async function resetDemoData() {
         const btn = document.getElementById('btn-reset-demo');
         const icon = document.getElementById('reset-icon');
@@ -717,16 +699,15 @@
             });
 
             const result = await res.json();
-            showToast(result.message || 'Demo data restored!');
+            showToast(result.message || 'Demo maʼlumotlar tiklandi!');
             setTimeout(() => window.location.reload(), 600);
         } catch (err) {
-            showToast('Failed to reset demo data: ' + err.message, 'error');
+            showToast('Demo maʼlumotlarni tiklab boʻlmadi: ' + err.message, 'error');
             btn.disabled = false;
             icon.classList.remove('fa-spin');
         }
     }
 
-    // Client-side Instant Filter & Search
     function filterTable() {
         const q = (document.getElementById('filter-search').value || '').toLowerCase().trim();
         const role = document.getElementById('filter-role').value;

@@ -72,7 +72,10 @@
             "@auto-scripts"
         ],
         "setup": "node scripts/setup.js",
-        "dev": "node scripts/start.js"
+        "dev": "node scripts/start.js",
+        "devserver": "php -S 127.0.0.1:8000 -t public",
+        "db:migrate": "php bin/console doctrine:schema:update --force --no-interaction",
+        "db:seed": "php bin/console app:seed-demo-data --no-interaction"
     },
     "conflict": {
         "symfony/symfony": "*"
